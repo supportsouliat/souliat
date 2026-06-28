@@ -11,13 +11,18 @@ export function isAdminUser(user) {
   return user?.email?.toLowerCase() === adminEmail;
 }
 
-export async function requestMagicLink(email) {
-  return supabase.auth.signInWithOtp({
+export async function createPasswordAccount(email, password) {
+  return supabase.auth.signUp({
     email,
+    password,
     options: {
       emailRedirectTo: "https://supportsouliat.github.io/souliat/"
     }
   });
+}
+
+export async function signInWithPassword(email, password) {
+  return supabase.auth.signInWithPassword({ email, password });
 }
 
 export async function getSessionUser() {

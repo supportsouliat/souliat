@@ -550,6 +550,11 @@ form {
   gap: 0.85rem;
 }
 
+.auth-actions {
+  display: grid;
+  gap: 0.7rem;
+}
+
 .message-card {
   display: grid;
   gap: 0.55rem;

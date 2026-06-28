@@ -118,7 +118,14 @@
             Email
             <input id="auth-email" type="email" autocomplete="email" placeholder="you@example.com" />
           </label>
-          <button class="primary-action" id="send-login-link" type="button">Send login link</button>
+          <label>
+            Password
+            <input id="auth-password" type="password" autocomplete="current-password" placeholder="Your password" />
+          </label>
+          <div class="auth-actions">
+            <button class="primary-action" id="sign-in-password" type="button">Sign in</button>
+            <button class="secondary-action" id="create-account" type="button">Create account</button>
+          </div>
         </div>
         <div id="signed-in-view" hidden>
           <p class="selected-note" id="account-email"></p>
@@ -208,10 +215,6 @@
             </select>
           </label>
           <label>
-            Your email
-            <input name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
-          </label>
-          <label>
             Your question
             <textarea
               name="question"
@@ -239,10 +242,6 @@
           <input type="hidden" name="_captcha" value="false" />
           <input type="hidden" name="_template" value="table" />
           <label>
-            Your email
-            <input name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
-          </label>
-          <label>
             Leave your message
             <textarea
               name="professionalMessage"
@@ -268,10 +267,6 @@
           <label>
             Your name
             <input name="collaboratorName" type="text" autocomplete="name" placeholder="Your name" required />
-          </label>
-          <label>
-            Your email
-            <input name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
           </label>
           <label>
             Region and languages

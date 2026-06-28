@@ -9,12 +9,13 @@ import {
 } from "./zodiac.mjs";
 import {
   answerMessage,
+  createPasswordAccount,
   getSessionUser,
   isAdminUser,
   loadAdminMessages,
   loadMyMessages,
-  requestMagicLink,
   saveMessage,
+  signInWithPassword,
   signOutUser,
   supabase
 } from "./souliat-data.mjs";
@@ -150,6 +151,7 @@ const preferredLanguageSelect = document.querySelector("#preferred-language");
 const regionSelect = document.querySelector("#region");
 const automaticZodiacNote = document.querySelector("#automatic-zodiac-note");
 const authEmailInput = document.querySelector("#auth-email");
+const authPasswordInput = document.querySelector("#auth-password");
 const authStatus = document.querySelector("#auth-status");
 const signedOutView = document.querySelector("#signed-out-view");
 const signedInView = document.querySelector("#signed-in-view");
@@ -279,6 +281,25 @@ function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
+function getAuthCredentials() {
+  return {
+    email: authEmailInput.value.trim(),
+    password: authPasswordInput.value
+  };
+}
+
+function validatePasswordCredentials(email, password) {
+  if (!isValidEmail(email)) {
+    return "Add a valid email.";
+  }
+
+  if (password.length < 6) {
+    return "Password must be at least 6 characters.";
+  }
+
+  return "";
+}
+
 function requireSignedIn(statusElement) {
   if (currentUser) {
     return true;
@@ -312,6 +333,14 @@ async function sendSouliatEmail(subject, fields) {
 
 function formatMessageType(type) {
   return type.replaceAll("_", " ");
+}
+
+function openEmailReply(message, response) {
+  const subject = encodeURIComponent("Your SOULIAT reply");
+  const body = encodeURIComponent(
+    `Hi${message.sender_name ? ` ${message.sender_name}` : ""},\n\n${response}\n\nSOULIAT`
+  );
+  window.location.href = `mailto:${message.sender_email}?subject=${subject}&body=${body}`;
 }
 
 function renderMessages(container, messages, { admin = false } = {}) {
@@ -350,7 +379,7 @@ function renderMessages(container, messages, { admin = false } = {}) {
             const button = document.createElement("button");
             button.className = "secondary-action";
             button.type = "button";
-            button.textContent = "Save reply";
+            button.textContent = "Save reply and open email";
             button.addEventListener("click", async () => {
               const response = textarea.value.trim();
               if (response.length < 3) {
@@ -359,6 +388,9 @@ function renderMessages(container, messages, { admin = false } = {}) {
               button.textContent = "Saving...";
               const { error } = await answerMessage(message.id, response);
               button.textContent = error ? "Could not save" : "Reply saved";
+              if (!error) {
+                openEmailReply(message, response);
+              }
               await refreshMessages();
             });
 
@@ -440,19 +472,36 @@ supabase.auth.onAuthStateChange((_event, session) => {
   renderAuthState(session?.user ?? null);
 });
 
-document.querySelector("#send-login-link").addEventListener("click", async () => {
-  const email = authEmailInput.value.trim();
+document.querySelector("#sign-in-password").addEventListener("click", async () => {
+  const { email, password } = getAuthCredentials();
+  const validationMessage = validatePasswordCredentials(email, password);
 
-  if (!isValidEmail(email)) {
-    authStatus.textContent = "Add a valid email to receive your login link.";
+  if (validationMessage) {
+    authStatus.textContent = validationMessage;
     return;
   }
 
-  authStatus.textContent = "Sending login link...";
-  const { error } = await requestMagicLink(email);
+  authStatus.textContent = "Signing in...";
+  const { error } = await signInWithPassword(email, password);
   authStatus.textContent = error
-    ? "We could not send the login link. Try again."
-    : "Check your email and open the login link.";
+    ? "We could not sign you in. Check your email and password."
+    : "Signed in.";
+});
+
+document.querySelector("#create-account").addEventListener("click", async () => {
+  const { email, password } = getAuthCredentials();
+  const validationMessage = validatePasswordCredentials(email, password);
+
+  if (validationMessage) {
+    authStatus.textContent = validationMessage;
+    return;
+  }
+
+  authStatus.textContent = "Creating your account...";
+  const { error } = await createPasswordAccount(email, password);
+  authStatus.textContent = error
+    ? "We could not create the account. Try signing in if it already exists."
+    : "Account created. If Supabase asks for confirmation, check your email once.";
 });
 
 document.querySelector("#sign-out").addEventListener("click", async () => {
@@ -532,7 +581,7 @@ form.addEventListener("submit", async (event) => {
     question: String(formData.get("question") ?? ""),
     zodiacPreference: selectedZodiac
   };
-  const email = String(formData.get("email") ?? "").trim();
+  const email = currentUser.email;
   const validation = validateInquiry(draft);
 
   if (!validation.ok) {
@@ -596,7 +645,7 @@ professionalForm.addEventListener("submit", async (event) => {
   }
 
   const formData = new FormData(professionalForm);
-  const email = String(formData.get("email") ?? "").trim();
+  const email = currentUser.email;
   const message = String(formData.get("professionalMessage") ?? "").trim();
 
   if (!isValidEmail(email)) {
@@ -662,7 +711,7 @@ collaborationForm.addEventListener("submit", async (event) => {
 
   const formData = new FormData(collaborationForm);
   const collaboratorName = String(formData.get("collaboratorName") ?? "").trim();
-  const email = String(formData.get("email") ?? "").trim();
+  const email = currentUser.email;
   const regionLanguages = String(formData.get("regionLanguages") ?? "").trim();
   const message = String(formData.get("collaborationMessage") ?? "").trim();
 
