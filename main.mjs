@@ -338,8 +338,8 @@ form.addEventListener("submit", async (event) => {
     return;
   }
 
-  const request = await createReadingRequest(draft);
-  status.textContent = `Received. Your ${request.topic} inquiry is ready for a manual 24-48 hour response.`;
+  await createReadingRequest(draft);
+  status.textContent = "Message received. We will reply soon.";
   form.reset();
 });
 
@@ -357,6 +357,6 @@ professionalForm.addEventListener("submit", (event) => {
     return;
   }
 
-  professionalStatus.textContent = `Received. ${selectedProfessional} can review your ${focusArea} message in ${preferredLanguage}.`;
+  professionalStatus.textContent = "Message received. We will reply soon.";
   professionalForm.reset();
 });
