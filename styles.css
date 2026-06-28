@@ -580,6 +580,10 @@ form {
   cursor: pointer;
 }
 
+summary.text-action {
+  display: list-item;
+}
+
 .legal-copy {
   display: grid;
   gap: 0.75rem;

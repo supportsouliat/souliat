@@ -154,7 +154,6 @@ const automaticZodiacNote = document.querySelector("#automatic-zodiac-note");
 const authEmailInput = document.querySelector("#auth-email");
 const authPasswordInput = document.querySelector("#auth-password");
 const legalConsentInput = document.querySelector("#legal-consent");
-const legalPanel = document.querySelector("#legal-panel");
 const authStatus = document.querySelector("#auth-status");
 const signedOutView = document.querySelector("#signed-out-view");
 const signedInView = document.querySelector("#signed-in-view");
@@ -510,16 +509,6 @@ document.querySelector("#create-account").addEventListener("click", async () => 
   authStatus.textContent = error
     ? "We could not create the account. Try signing in if it already exists."
     : "Account created. If Supabase asks for confirmation, check your email once.";
-});
-
-document.querySelector("#open-legal").addEventListener("click", () => {
-  legalPanel.hidden = false;
-  legalPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-});
-
-document.querySelector("#close-legal").addEventListener("click", () => {
-  legalPanel.hidden = true;
-  document.querySelector("#auth-panel").scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
 document.querySelector("#reset-password").addEventListener("click", async () => {
