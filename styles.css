@@ -545,6 +545,41 @@ form {
   cursor: pointer;
 }
 
+.message-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.message-card {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.85rem;
+  border: 1px solid rgba(217, 199, 255, 0.14);
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.message-card strong {
+  color: var(--text);
+  text-transform: capitalize;
+}
+
+.message-card small {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.message-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.48;
+}
+
+.message-card .admin-response {
+  color: var(--lavender);
+  font-weight: 700;
+}
+
 label {
   display: grid;
   gap: 0.38rem;

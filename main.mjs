@@ -7,6 +7,17 @@ import {
   unknownWesternSign,
   zodiacOptions
 } from "./zodiac.mjs";
+import {
+  answerMessage,
+  getSessionUser,
+  isAdminUser,
+  loadAdminMessages,
+  loadMyMessages,
+  requestMagicLink,
+  saveMessage,
+  signOutUser,
+  supabase
+} from "./souliat-data.mjs";
 
 const card = getDailyTarotCard(new Date());
 let selectedZodiac = "both";
@@ -21,6 +32,7 @@ let birthPlace = "";
 let preferredLanguage = "English";
 let region = "United States";
 let selectedProfessional = "Aarav";
+let currentUser = null;
 
 const westernSigns = [
   "Aries",
@@ -137,6 +149,15 @@ const birthPlaceInput = document.querySelector("#birth-place");
 const preferredLanguageSelect = document.querySelector("#preferred-language");
 const regionSelect = document.querySelector("#region");
 const automaticZodiacNote = document.querySelector("#automatic-zodiac-note");
+const authEmailInput = document.querySelector("#auth-email");
+const authStatus = document.querySelector("#auth-status");
+const signedOutView = document.querySelector("#signed-out-view");
+const signedInView = document.querySelector("#signed-in-view");
+const accountEmail = document.querySelector("#account-email");
+const messagesPanel = document.querySelector("#messages-panel");
+const myMessageList = document.querySelector("#my-message-list");
+const adminPanel = document.querySelector("#admin-panel");
+const adminMessageList = document.querySelector("#admin-message-list");
 
 function renderOptions(container, options, selected, onSelect) {
   container.replaceChildren(
@@ -258,6 +279,16 @@ function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
+function requireSignedIn(statusElement) {
+  if (currentUser) {
+    return true;
+  }
+
+  statusElement.textContent = "Sign in first so we can save your message and reply inside SOULIAT.";
+  document.querySelector("#auth-panel").scrollIntoView({ behavior: "smooth", block: "start" });
+  return false;
+}
+
 async function sendSouliatEmail(subject, fields) {
   const payload = new FormData();
   payload.append("_subject", subject);
@@ -277,6 +308,100 @@ async function sendSouliatEmail(subject, fields) {
   if (!response.ok) {
     throw new Error("Message could not be sent.");
   }
+}
+
+function formatMessageType(type) {
+  return type.replaceAll("_", " ");
+}
+
+function renderMessages(container, messages, { admin = false } = {}) {
+  container.replaceChildren(
+    ...(messages.length
+      ? messages.map((message) => {
+          const article = document.createElement("article");
+          article.className = "message-card";
+
+          const title = document.createElement("strong");
+          title.textContent = `${formatMessageType(message.message_type)} · ${message.status}`;
+
+          const meta = document.createElement("small");
+          meta.textContent = `${new Date(message.created_at).toLocaleString()}${
+            admin ? ` · ${message.sender_email}` : ""
+          }${message.selected_professional ? ` · ${message.selected_professional}` : ""}`;
+
+          const body = document.createElement("p");
+          body.textContent = message.content;
+
+          article.append(title, meta, body);
+
+          if (message.admin_response) {
+            const response = document.createElement("p");
+            response.className = "admin-response";
+            response.textContent = `SOULIAT: ${message.admin_response}`;
+            article.append(response);
+          }
+
+          if (admin) {
+            const textarea = document.createElement("textarea");
+            textarea.rows = 3;
+            textarea.placeholder = "Write your reply here.";
+            textarea.value = message.admin_response || "";
+
+            const button = document.createElement("button");
+            button.className = "secondary-action";
+            button.type = "button";
+            button.textContent = "Save reply";
+            button.addEventListener("click", async () => {
+              const response = textarea.value.trim();
+              if (response.length < 3) {
+                return;
+              }
+              button.textContent = "Saving...";
+              const { error } = await answerMessage(message.id, response);
+              button.textContent = error ? "Could not save" : "Reply saved";
+              await refreshMessages();
+            });
+
+            article.append(textarea, button);
+          }
+
+          return article;
+        })
+      : [Object.assign(document.createElement("p"), { textContent: "No messages yet." })])
+  );
+}
+
+async function refreshMessages() {
+  if (!currentUser) {
+    messagesPanel.hidden = true;
+    adminPanel.hidden = true;
+    return;
+  }
+
+  messagesPanel.hidden = false;
+  const { data: myMessages = [] } = await loadMyMessages();
+  renderMessages(myMessageList, myMessages);
+
+  if (isAdminUser(currentUser)) {
+    adminPanel.hidden = false;
+    const { data: adminMessages = [] } = await loadAdminMessages();
+    renderMessages(adminMessageList, adminMessages, { admin: true });
+  } else {
+    adminPanel.hidden = true;
+  }
+}
+
+async function renderAuthState(user) {
+  currentUser = user;
+  signedOutView.hidden = Boolean(user);
+  signedInView.hidden = !user;
+  accountEmail.textContent = user ? `Signed in as ${user.email}` : "";
+  authStatus.textContent = user
+    ? isAdminUser(user)
+      ? "Admin mode active."
+      : "Your messages will be saved in SOULIAT."
+    : "";
+  await refreshMessages();
 }
 
 function renderIntentionOptions() {
@@ -309,6 +434,31 @@ renderSignSelect(westernSignSelect, westernSigns, westernSign);
 renderSignSelect(vedicSignSelect, vedicSigns, vedicSign);
 renderZodiacOptions();
 renderProfessionalOptions();
+
+renderAuthState(await getSessionUser());
+supabase.auth.onAuthStateChange((_event, session) => {
+  renderAuthState(session?.user ?? null);
+});
+
+document.querySelector("#send-login-link").addEventListener("click", async () => {
+  const email = authEmailInput.value.trim();
+
+  if (!isValidEmail(email)) {
+    authStatus.textContent = "Add a valid email to receive your login link.";
+    return;
+  }
+
+  authStatus.textContent = "Sending login link...";
+  const { error } = await requestMagicLink(email);
+  authStatus.textContent = error
+    ? "We could not send the login link. Try again."
+    : "Check your email and open the login link.";
+});
+
+document.querySelector("#sign-out").addEventListener("click", async () => {
+  await signOutUser();
+  await renderAuthState(null);
+});
 
 seekerNameInput.addEventListener("input", () => {
   seekerName = seekerNameInput.value.trim();
@@ -372,6 +522,10 @@ const status = document.querySelector("#form-status");
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
+  if (!requireSignedIn(status)) {
+    return;
+  }
+
   const formData = new FormData(form);
   const draft = {
     topic: String(formData.get("topic") ?? ""),
@@ -395,7 +549,7 @@ form.addEventListener("submit", async (event) => {
 
   try {
     await createReadingRequest(draft);
-    await sendSouliatEmail("SOULIAT personal card spread request", {
+    const messageFields = {
       name: seekerName,
       email,
       topic: draft.topic,
@@ -408,9 +562,21 @@ form.addEventListener("submit", async (event) => {
       birthPlace,
       preferredLanguage,
       region
+    };
+    const { error: saveError } = await saveMessage(currentUser, {
+      senderName: seekerName,
+      messageType: "personal_spread",
+      topic: draft.topic,
+      content: draft.question,
+      metadata: messageFields
     });
+    if (saveError) {
+      throw saveError;
+    }
+    sendSouliatEmail("SOULIAT personal card spread request", messageFields).catch(() => {});
     status.textContent = "Message received. We will reply soon.";
     form.reset();
+    await refreshMessages();
   } catch {
     status.textContent = "We could not send your message. Please try again.";
   }
@@ -424,6 +590,10 @@ const collaborationStatus = document.querySelector("#collaboration-status");
 
 professionalForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+
+  if (!requireSignedIn(professionalStatus)) {
+    return;
+  }
 
   const formData = new FormData(professionalForm);
   const email = String(formData.get("email") ?? "").trim();
@@ -442,7 +612,7 @@ professionalForm.addEventListener("submit", async (event) => {
   professionalStatus.textContent = "Sending your message...";
 
   try {
-    await sendSouliatEmail("SOULIAT professional guidance request", {
+    const messageFields = {
       name: seekerName,
       email,
       selectedProfessional,
@@ -456,9 +626,22 @@ professionalForm.addEventListener("submit", async (event) => {
       birthPlace,
       preferredLanguage,
       region
+    };
+    const { error: saveError } = await saveMessage(currentUser, {
+      senderName: seekerName,
+      messageType: "professional_guidance",
+      selectedProfessional,
+      topic: focusArea,
+      content: message,
+      metadata: messageFields
     });
+    if (saveError) {
+      throw saveError;
+    }
+    sendSouliatEmail("SOULIAT professional guidance request", messageFields).catch(() => {});
     professionalStatus.textContent = "Message received. We will reply soon.";
     professionalForm.reset();
+    await refreshMessages();
   } catch {
     professionalStatus.textContent = "We could not send your message. Please try again.";
   }
@@ -472,6 +655,10 @@ openCollaborationButton.addEventListener("click", () => {
 
 collaborationForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+
+  if (!requireSignedIn(collaborationStatus)) {
+    return;
+  }
 
   const formData = new FormData(collaborationForm);
   const collaboratorName = String(formData.get("collaboratorName") ?? "").trim();
@@ -502,14 +689,25 @@ collaborationForm.addEventListener("submit", async (event) => {
   collaborationStatus.textContent = "Sending your collaboration request...";
 
   try {
-    await sendSouliatEmail("SOULIAT professional collaboration request", {
+    const messageFields = {
       collaboratorName,
       email,
       regionLanguages,
       message
+    };
+    const { error: saveError } = await saveMessage(currentUser, {
+      senderName: collaboratorName,
+      messageType: "collaboration",
+      content: message,
+      metadata: messageFields
     });
+    if (saveError) {
+      throw saveError;
+    }
+    sendSouliatEmail("SOULIAT professional collaboration request", messageFields).catch(() => {});
     collaborationStatus.textContent = "Message received. We will reply soon.";
     collaborationForm.reset();
+    await refreshMessages();
   } catch {
     collaborationStatus.textContent = "We could not send your message. Please try again.";
   }

@@ -108,6 +108,25 @@
         </div>
       </section>
 
+      <section class="panel auth-panel" id="auth-panel" aria-labelledby="auth-title">
+        <div class="section-heading">
+          <p class="eyebrow">Account</p>
+          <h2 id="auth-title">Sign in to save your messages.</h2>
+        </div>
+        <div id="signed-out-view">
+          <label>
+            Email
+            <input id="auth-email" type="email" autocomplete="email" placeholder="you@example.com" />
+          </label>
+          <button class="primary-action" id="send-login-link" type="button">Send login link</button>
+        </div>
+        <div id="signed-in-view" hidden>
+          <p class="selected-note" id="account-email"></p>
+          <button class="secondary-action" id="sign-out" type="button">Sign out</button>
+        </div>
+        <p class="form-status" id="auth-status" role="status"></p>
+      </section>
+
       <section class="panel unlocked-panel" id="daily-access" aria-labelledby="daily-title" hidden>
         <div class="section-heading">
           <p class="eyebrow">Daily access</p>
@@ -123,6 +142,14 @@
             <p id="daily-tuning"></p>
           </article>
         </div>
+      </section>
+
+      <section class="panel messages-panel" id="messages-panel" aria-labelledby="messages-title" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Messages</p>
+          <h2 id="messages-title">Your SOULIAT messages.</h2>
+        </div>
+        <div class="message-list" id="my-message-list"></div>
       </section>
 
       <section class="panel tarot-panel" id="tarot-panel" aria-labelledby="tarot-title" hidden>
@@ -261,6 +288,14 @@
           <button class="primary-action" type="submit">Send collaboration request</button>
           <p class="form-status" id="collaboration-status" role="status"></p>
         </form>
+      </section>
+
+      <section class="panel admin-panel" id="admin-panel" aria-labelledby="admin-title" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Admin</p>
+          <h2 id="admin-title">SOULIAT inbox.</h2>
+        </div>
+        <div class="message-list" id="admin-message-list"></div>
       </section>
     </main>
 
