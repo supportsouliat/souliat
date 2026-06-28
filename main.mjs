@@ -146,12 +146,6 @@ function renderOptions(container, options, selected, onSelect) {
   );
 }
 
-function goToStep(step) {
-  document.querySelectorAll(".test-step").forEach((element) => {
-    element.hidden = element.dataset.step !== String(step);
-  });
-}
-
 function renderZodiacOptions() {
   zodiacContainer.replaceChildren(
     ...zodiacOptions.map((option) => {
@@ -244,26 +238,32 @@ function updateDailyTuning() {
   }${birthPlace ? ` in ${birthPlace}` : ""}. ${preferredLanguage}, ${region}.`;
 }
 
-renderOptions(
-  document.querySelector("#intention-options"),
-  ["clarity", "love", "protection", "new direction"],
-  dailyIntention,
-  (value) => {
-    dailyIntention = value;
-    goToStep(2);
-  }
-);
+function renderIntentionOptions() {
+  renderOptions(
+    document.querySelector("#intention-options"),
+    ["clarity", "love", "protection", "new direction"],
+    dailyIntention,
+    (value) => {
+      dailyIntention = value;
+      renderIntentionOptions();
+    }
+  );
+}
 
-renderOptions(
-  document.querySelector("#focus-options"),
-  ["love", "marriage", "career", "money", "healing", "spirituality"],
-  focusArea,
-  (value) => {
-    focusArea = value;
-    goToStep(3);
-  }
-);
+function renderFocusOptions() {
+  renderOptions(
+    document.querySelector("#focus-options"),
+    ["love", "marriage", "career", "money", "healing", "spirituality"],
+    focusArea,
+    (value) => {
+      focusArea = value;
+      renderFocusOptions();
+    }
+  );
+}
 
+renderIntentionOptions();
+renderFocusOptions();
 renderSignSelect(westernSignSelect, westernSigns, westernSign);
 renderSignSelect(vedicSignSelect, vedicSigns, vedicSign);
 renderZodiacOptions();
