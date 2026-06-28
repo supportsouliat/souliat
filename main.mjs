@@ -418,6 +418,9 @@ form.addEventListener("submit", async (event) => {
 
 const professionalForm = document.querySelector("#professional-form");
 const professionalStatus = document.querySelector("#professional-status");
+const openCollaborationButton = document.querySelector("#open-collaboration");
+const collaborationForm = document.querySelector("#collaboration-form");
+const collaborationStatus = document.querySelector("#collaboration-status");
 
 professionalForm.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -458,5 +461,56 @@ professionalForm.addEventListener("submit", async (event) => {
     professionalForm.reset();
   } catch {
     professionalStatus.textContent = "We could not send your message. Please try again.";
+  }
+});
+
+openCollaborationButton.addEventListener("click", () => {
+  collaborationForm.hidden = false;
+  openCollaborationButton.hidden = true;
+  collaborationForm.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+collaborationForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(collaborationForm);
+  const collaboratorName = String(formData.get("collaboratorName") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
+  const regionLanguages = String(formData.get("regionLanguages") ?? "").trim();
+  const message = String(formData.get("collaborationMessage") ?? "").trim();
+
+  if (collaboratorName.length < 2) {
+    collaborationStatus.textContent = "Add your name so we know who is contacting us.";
+    return;
+  }
+
+  if (!isValidEmail(email)) {
+    collaborationStatus.textContent = "Add a valid email so we can reply.";
+    return;
+  }
+
+  if (regionLanguages.length < 4) {
+    collaborationStatus.textContent = "Add your region and languages.";
+    return;
+  }
+
+  if (message.length < 20) {
+    collaborationStatus.textContent = "Tell us a little more about your practice.";
+    return;
+  }
+
+  collaborationStatus.textContent = "Sending your collaboration request...";
+
+  try {
+    await sendSouliatEmail("SOULIAT professional collaboration request", {
+      collaboratorName,
+      email,
+      regionLanguages,
+      message
+    });
+    collaborationStatus.textContent = "Message received. We will reply soon.";
+    collaborationForm.reset();
+  } catch {
+    collaborationStatus.textContent = "We could not send your message. Please try again.";
   }
 });

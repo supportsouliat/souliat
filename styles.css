@@ -518,6 +518,33 @@ form {
   font-size: 0.78rem;
 }
 
+.collaboration-box {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding: 0.95rem;
+  border: 1px solid rgba(216, 180, 254, 0.18);
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.collaboration-box p {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.secondary-action {
+  width: 100%;
+  min-height: 2.8rem;
+  border: 1px solid rgba(216, 180, 254, 0.38);
+  border-radius: 0.5rem;
+  background: rgba(123, 44, 255, 0.16);
+  color: var(--ivory);
+  font-weight: 800;
+  cursor: pointer;
+}
+
 label {
   display: grid;
   gap: 0.38rem;

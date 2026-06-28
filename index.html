@@ -226,6 +226,41 @@
           <button class="primary-action" type="submit">Request professional guidance</button>
           <p class="form-status" id="professional-status" role="status"></p>
         </form>
+        <div class="collaboration-box">
+          <p>Are you a professional and want to collaborate with us?</p>
+          <button class="secondary-action" id="open-collaboration" type="button">Contact us here</button>
+        </div>
+        <form
+          id="collaboration-form"
+          action="https://formsubmit.co/supportsouliat@gmail.com"
+          method="POST"
+          hidden
+        >
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_template" value="table" />
+          <label>
+            Your name
+            <input name="collaboratorName" type="text" autocomplete="name" placeholder="Your name" required />
+          </label>
+          <label>
+            Your email
+            <input name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+          </label>
+          <label>
+            Region and languages
+            <input name="regionLanguages" type="text" placeholder="Spain, Spanish and English" required />
+          </label>
+          <label>
+            Tell us about your practice
+            <textarea
+              name="collaborationMessage"
+              rows="4"
+              placeholder="Share your specialty, experience, and how you would like to collaborate with SOULIAT."
+            ></textarea>
+          </label>
+          <button class="primary-action" type="submit">Send collaboration request</button>
+          <p class="form-status" id="collaboration-status" role="status"></p>
+        </form>
       </section>
     </main>
 
