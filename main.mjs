@@ -12,6 +12,7 @@ const card = getDailyTarotCard(new Date());
 let selectedZodiac = "both";
 let dailyIntention = "clarity";
 let focusArea = "love";
+let seekerName = "";
 let westernSign = "Aries";
 let vedicSign = unknownVedicSign;
 let birthDate = "";
@@ -125,6 +126,9 @@ const vedicSignField = document.querySelector("#vedic-sign-field");
 const westernSignSelect = document.querySelector("#western-sign");
 const vedicSignSelect = document.querySelector("#vedic-sign");
 const dailyTuning = document.querySelector("#daily-tuning");
+const dailyTitle = document.querySelector("#daily-title");
+const unlockNote = document.querySelector("#unlock-note");
+const seekerNameInput = document.querySelector("#seeker-name");
 const birthDateInput = document.querySelector("#birth-date");
 const birthTimeInput = document.querySelector("#birth-time");
 const birthPlaceInput = document.querySelector("#birth-place");
@@ -229,13 +233,23 @@ function updateDailyTuning() {
     westernSign === unknownWesternSign ? calculateWesternSunSign(birthDate) : null;
   const westernDisplaySign = calculatedWesternSign ?? westernSign;
 
-  dailyTuning.textContent = `${dailyIntention} for ${focusArea}. ${selected?.label ?? "Both"} guidance${
+  dailyTuning.textContent = `${seekerName ? `${seekerName}, ` : ""}${dailyIntention} for ${focusArea}. ${selected?.label ?? "Both"} guidance${
     selectedZodiac !== "vedic" ? `, ${westernDisplaySign}` : ""
   }${selectedZodiac !== "western" ? `, ${vedicSign}` : ""}.${
     birthDate ? ` Born on ${birthDate}` : ""
   }${
     birthTime ? ` Born around ${birthTime}` : ""
   }${birthPlace ? ` in ${birthPlace}` : ""}. ${preferredLanguage}, ${region}.`;
+}
+
+function getUnlockedMessage() {
+  return seekerName ? `${seekerName}, your portal is unlocked.` : "Your portal is unlocked.";
+}
+
+function updateUnlockedMessage() {
+  const message = getUnlockedMessage();
+  unlockNote.textContent = message;
+  dailyTitle.textContent = message;
 }
 
 function renderIntentionOptions() {
@@ -268,6 +282,11 @@ renderSignSelect(westernSignSelect, westernSigns, westernSign);
 renderSignSelect(vedicSignSelect, vedicSigns, vedicSign);
 renderZodiacOptions();
 renderProfessionalOptions();
+
+seekerNameInput.addEventListener("input", () => {
+  seekerName = seekerNameInput.value.trim();
+  updateUnlockedMessage();
+});
 
 westernSignSelect.addEventListener("change", () => {
   westernSign = westernSignSelect.value;
@@ -307,6 +326,7 @@ document.querySelector("#start-test").addEventListener("click", () => {
 });
 
 document.querySelector("#unlock-access").addEventListener("click", () => {
+  updateUnlockedMessage();
   updateDailyTuning();
   document.querySelector("#hero").classList.add("hero-compact");
   document.querySelector("#start-test").hidden = true;
