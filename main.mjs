@@ -17,6 +17,7 @@ import {
   saveMessage,
   signInWithPassword,
   signOutUser,
+  resetPassword,
   supabase
 } from "./souliat-data.mjs";
 
@@ -152,6 +153,7 @@ const regionSelect = document.querySelector("#region");
 const automaticZodiacNote = document.querySelector("#automatic-zodiac-note");
 const authEmailInput = document.querySelector("#auth-email");
 const authPasswordInput = document.querySelector("#auth-password");
+const legalConsentInput = document.querySelector("#legal-consent");
 const authStatus = document.querySelector("#auth-status");
 const signedOutView = document.querySelector("#signed-out-view");
 const signedInView = document.querySelector("#signed-in-view");
@@ -497,11 +499,31 @@ document.querySelector("#create-account").addEventListener("click", async () => 
     return;
   }
 
+  if (!legalConsentInput.checked) {
+    authStatus.textContent = "Accept the Terms, Privacy Notice and AI notice to create an account.";
+    return;
+  }
+
   authStatus.textContent = "Creating your account...";
   const { error } = await createPasswordAccount(email, password);
   authStatus.textContent = error
     ? "We could not create the account. Try signing in if it already exists."
     : "Account created. If Supabase asks for confirmation, check your email once.";
+});
+
+document.querySelector("#reset-password").addEventListener("click", async () => {
+  const email = authEmailInput.value.trim();
+
+  if (!isValidEmail(email)) {
+    authStatus.textContent = "Add your email first so we can send a password reset link.";
+    return;
+  }
+
+  authStatus.textContent = "Sending password reset link...";
+  const { error } = await resetPassword(email);
+  authStatus.textContent = error
+    ? "We could not send the reset link. Try again."
+    : "Check your email for the password reset link.";
 });
 
 document.querySelector("#sign-out").addEventListener("click", async () => {

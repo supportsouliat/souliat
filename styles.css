@@ -555,6 +555,30 @@ form {
   gap: 0.7rem;
 }
 
+.legal-check {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.legal-check input {
+  width: auto;
+  margin-top: 0.18rem;
+}
+
+.legal-copy {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.legal-copy p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .message-card {
   display: grid;
   gap: 0.55rem;

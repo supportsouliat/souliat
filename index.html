@@ -122,9 +122,14 @@
             Password
             <input id="auth-password" type="password" autocomplete="current-password" placeholder="Your password" />
           </label>
+          <label class="legal-check">
+            <input id="legal-consent" type="checkbox" />
+            I accept the Terms, Privacy Notice, data processing, and AI transparency notice.
+          </label>
           <div class="auth-actions">
             <button class="primary-action" id="sign-in-password" type="button">Sign in</button>
             <button class="secondary-action" id="create-account" type="button">Create account</button>
+            <button class="secondary-action" id="reset-password" type="button">Forgot password?</button>
           </div>
         </div>
         <div id="signed-in-view" hidden>
@@ -132,6 +137,20 @@
           <button class="secondary-action" id="sign-out" type="button">Sign out</button>
         </div>
         <p class="form-status" id="auth-status" role="status"></p>
+      </section>
+
+      <section class="panel legal-panel" id="legal-panel" aria-labelledby="legal-title">
+        <div class="section-heading">
+          <p class="eyebrow">Legal</p>
+          <h2 id="legal-title">Terms, privacy and AI notice.</h2>
+        </div>
+        <div class="legal-copy">
+          <p>SOULIAT provides spiritual, tarot, mantra and astrology-inspired guidance for reflection and entertainment. It is not medical, legal, financial, psychological or emergency advice.</p>
+          <p>We collect the data you submit, including name, email, birth details, language, region, questions and messages, so we can provide your account, save your messages, reply to you, improve support and prevent misuse.</p>
+          <p>Messages are stored in Supabase and may also be sent to supportsouliat@gmail.com for support handling. You can request access, correction or deletion of your personal data by contacting supportsouliat@gmail.com.</p>
+          <p>Some content may be generated or assisted by AI. Human review may be used for replies and professional guidance. Do not submit highly sensitive information unless it is necessary for your request.</p>
+          <p>By creating an account or sending a message, you confirm that you accept these terms and consent to this data processing.</p>
+        </div>
       </section>
 
       <section class="panel unlocked-panel" id="daily-access" aria-labelledby="daily-title" hidden>
