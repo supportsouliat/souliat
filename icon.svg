@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="SOULIAT">
+  <rect width="512" height="512" rx="112" fill="#080611"/>
+  <circle cx="256" cy="256" r="180" fill="#2b124c" stroke="#d9c7ff" stroke-width="10"/>
+  <path d="M128 256c34-54 75-81 128-81s94 27 128 81c-34 54-75 81-128 81s-94-27-128-81Z" fill="none" stroke="#fff8ff" stroke-width="16" stroke-linejoin="round"/>
+  <circle cx="256" cy="256" r="44" fill="#fff8ff"/>
+  <path d="M256 82v74M256 356v74M154 154l52 52M358 154l-52 52M154 358l52-52M358 358l-52-52" stroke="#f2c572" stroke-width="12" stroke-linecap="round"/>
+</svg>

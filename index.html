@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#080015" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>SOULIAT</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero" id="hero" aria-labelledby="app-title">
+        <div class="stars" aria-hidden="true"></div>
+        <div class="zodiac-ring" aria-hidden="true"></div>
+        <div class="brand-mark" aria-hidden="true">
+          <img class="brand-logo" src="./souliat-logo.png" alt="" />
+        </div>
+        <p class="eyebrow">Daily spiritual companion</p>
+        <h1 class="app-title" id="app-title">SOULIAT</h1>
+        <p class="hero-copy">Your spiritual journey in one powerful app.</p>
+        <button class="primary-action hero-action" id="start-test" type="button">
+          Start your spiritual test
+        </button>
+        <p class="unlock-note" id="unlock-note" hidden>Your portal is unlocked.</p>
+        <div class="crystal-scene" aria-hidden="true">
+          <div class="candle candle-left"></div>
+          <div class="crystal-small crystal-small-left"></div>
+          <div class="crystal-ball"></div>
+          <div class="crystal-small crystal-small-right"></div>
+          <div class="candle candle-right"></div>
+        </div>
+      </section>
+
+      <section class="panel test-panel" id="test-panel" aria-labelledby="test-title">
+        <div class="section-heading">
+          <p class="eyebrow">Spiritual test</p>
+          <h2 id="test-title">Unlock your daily SOULIAT access.</h2>
+        </div>
+
+        <div class="test-step" data-step="1">
+          <p class="test-question">What energy are you looking for today?</p>
+          <div class="answer-grid" id="intention-options"></div>
+        </div>
+
+        <div class="test-step" data-step="2" hidden>
+          <p class="test-question">Which area should SOULIAT tune first?</p>
+          <div class="answer-grid" id="focus-options"></div>
+        </div>
+
+        <div class="test-step" data-step="3" hidden>
+          <p class="test-question">Choose your astrology system.</p>
+          <div class="zodiac-options" id="zodiac-options"></div>
+          <div class="sign-grid">
+            <label id="western-sign-field">
+              Western zodiac sign
+              <select id="western-sign"></select>
+            </label>
+            <label id="vedic-sign-field">
+              Vedic moon sign
+              <select id="vedic-sign"></select>
+            </label>
+          </div>
+          <div class="birth-grid">
+            <label>
+              Birth date
+              <input id="birth-date" type="date" />
+            </label>
+            <label>
+              Birth time
+              <input id="birth-time" type="time" />
+            </label>
+            <label>
+              Birth place
+              <input id="birth-place" type="text" placeholder="City, country" />
+            </label>
+            <label>
+              Preferred language
+              <select id="preferred-language">
+                <option value="English">English</option>
+                <option value="Spanish">Spanish</option>
+                <option value="German">German</option>
+              </select>
+            </label>
+            <label>
+              Region
+              <select id="region">
+                <option value="United States">United States</option>
+                <option value="India">India</option>
+                <option value="Spain">Spain</option>
+                <option value="Germany">Germany</option>
+                <option value="Latin America">Latin America</option>
+                <option value="Other">Other</option>
+              </select>
+            </label>
+          </div>
+          <p class="selected-note" id="automatic-zodiac-note"></p>
+          <button class="primary-action" id="unlock-access" type="button">
+            Unlock daily access
+          </button>
+        </div>
+      </section>
+
+      <section class="panel unlocked-panel" id="daily-access" aria-labelledby="daily-title" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Daily access</p>
+          <h2 id="daily-title">Your portal is unlocked.</h2>
+        </div>
+        <div class="daily-grid">
+          <article>
+            <span>Daily mantra</span>
+            <p id="daily-mantra"></p>
+          </article>
+          <article>
+            <span>Your tuning</span>
+            <p id="daily-tuning"></p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel tarot-panel" id="tarot-panel" aria-labelledby="tarot-title" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Daily cards</p>
+          <h2 id="tarot-title">Reveal the message waiting for you.</h2>
+        </div>
+
+        <button class="tarot-card" id="reveal-card" type="button">
+          <span class="card-back">Tap to reveal</span>
+          <span class="card-face" hidden>
+            <strong id="card-name"></strong>
+            <small id="card-archetype"></small>
+            <em id="card-mantra"></em>
+          </span>
+        </button>
+
+        <div class="reading-grid" id="reading-grid" hidden>
+          <article>
+            <span>General</span>
+            <p id="reading-general"></p>
+          </article>
+          <article>
+            <span>Love</span>
+            <p id="reading-love"></p>
+          </article>
+          <article>
+            <span>Career & money</span>
+            <p id="reading-career"></p>
+          </article>
+          <article>
+            <span>Reflection</span>
+            <p id="reading-reflection"></p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel inquiry-panel" id="inquiry-panel" aria-labelledby="inquiry-title" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Personal card spread</p>
+          <h2 id="inquiry-title">Ask for a personal card spread.</h2>
+        </div>
+        <form id="inquiry-form">
+          <label>
+            Focus area
+            <select name="topic" required>
+              <option value="">Choose one</option>
+              <option value="love">Love</option>
+              <option value="marriage">Marriage</option>
+              <option value="career">Career</option>
+              <option value="money">Money</option>
+              <option value="healing">Healing</option>
+              <option value="spirituality">Spirituality</option>
+            </select>
+          </label>
+          <label>
+            Your question
+            <textarea
+              name="question"
+              rows="4"
+              placeholder="What energy should I focus on for my relationship or life direction?"
+            ></textarea>
+          </label>
+          <button class="primary-action" type="submit">Submit inquiry</button>
+          <p class="form-status" id="form-status" role="status"></p>
+        </form>
+      </section>
+
+      <section class="panel professional-panel" id="professional-panel" aria-labelledby="professional-title" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Guided support</p>
+          <h2 id="professional-title">Connect with a professional.</h2>
+        </div>
+        <div
+          class="professional-grid"
+          id="professional-options"
+          aria-label="Choose a SOULIAT professional"
+          data-profiles="Aarav, Priya, Vikram Sethi, Camila, Anjali, Evelyn"
+        ></div>
+        <form id="professional-form">
+          <label>
+            Leave your message
+            <textarea
+              name="professionalMessage"
+              rows="4"
+              placeholder="Tell us what kind of guidance you want from a reader, astrologer, or spiritual professional."
+            ></textarea>
+          </label>
+          <button class="primary-action" type="submit">Request professional guidance</button>
+          <p class="form-status" id="professional-status" role="status"></p>
+        </form>
+      </section>
+    </main>
+
+    <script type="module" src="./main.mjs"></script>
+  </body>
+</html>

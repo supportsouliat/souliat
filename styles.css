@@ -1,0 +1,590 @@
+:root {
+  color-scheme: dark;
+  --bg-dark: #080015;
+  --bg-purple: #120026;
+  --bg-violet: #1B003D;
+  --purple: #7B2CFF;
+  --purple-bright: #A855F7;
+  --lavender: #D8B4FE;
+  --ivory: #F8F1E8;
+  --bg: var(--bg-dark);
+  --panel: rgba(18, 0, 38, 0.78);
+  --panel-border: rgba(216, 180, 254, 0.2);
+  --text: var(--ivory);
+  --muted: rgba(216, 180, 254, 0.78);
+  --aura: var(--lavender);
+  --candle: var(--lavender);
+  --rose: var(--lavender);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at top, rgba(123, 44, 255, 0.35), transparent 35%),
+    radial-gradient(circle at bottom, rgba(168, 85, 247, 0.25), transparent 40%),
+    linear-gradient(180deg, #080015 0%, #120026 55%, #05000d 100%);
+  color: var(--ivory);
+  font-family: system-ui, sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--candle);
+  outline-offset: 3px;
+}
+
+.app-shell {
+  width: min(100%, 31rem);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 0 1rem max(2rem, env(safe-area-inset-bottom));
+}
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: 1.35rem;
+  overflow: hidden;
+  padding-top: max(5.4rem, env(safe-area-inset-top));
+  padding-bottom: max(13rem, calc(env(safe-area-inset-bottom) + 13rem));
+  text-align: center;
+}
+
+.hero-compact {
+  min-height: 34vh;
+  padding-top: max(2rem, env(safe-area-inset-top));
+}
+
+.hero-compact .crystal-scene {
+  display: none;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 6% 4% auto;
+  height: min(27rem, 88vw);
+  border: 1px solid rgba(216, 180, 254, 0.08);
+  border-radius: 999px;
+  background:
+    repeating-conic-gradient(from 0deg, rgba(216, 180, 254, 0.14) 0 1deg, transparent 1deg 30deg),
+    radial-gradient(circle, transparent 0 55%, rgba(216, 180, 254, 0.08) 55% 56%, transparent 56%);
+  mask-image: radial-gradient(circle, transparent 0 38%, #000 40%, transparent 72%);
+  opacity: 0.7;
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(248, 241, 232, 0.88) 0 1px, transparent 1.4px),
+    radial-gradient(circle, rgba(216, 180, 254, 0.7) 0 1px, transparent 1.3px),
+    radial-gradient(circle, rgba(168, 85, 247, 0.55) 0 1px, transparent 1.4px);
+  background-position: 0 0, 1.3rem 2.2rem, 2.8rem 1.1rem;
+  background-size: 5.4rem 5.4rem, 7rem 7rem, 9rem 9rem;
+  mask-image: linear-gradient(#000 20%, transparent 100%);
+  opacity: 0.62;
+}
+
+.zodiac-ring {
+  position: absolute;
+  width: min(24rem, 88vw);
+  aspect-ratio: 1;
+  border: 1px solid rgba(216, 180, 254, 0.16);
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  transform: translateY(0.8rem);
+  box-shadow: inset 0 0 2rem rgba(123, 44, 255, 0.12);
+}
+
+.zodiac-ring::before,
+.zodiac-ring::after {
+  content: "";
+  position: absolute;
+  inset: 14%;
+  border: 1px solid rgba(216, 180, 254, 0.11);
+  transform: rotate(45deg);
+}
+
+.brand-mark {
+  position: relative;
+  z-index: 1;
+  width: clamp(12.5rem, 56vw, 15rem);
+  aspect-ratio: 1;
+  border: 1px solid rgba(248, 241, 232, 0.78);
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(216, 180, 254, 0.18), transparent 3.4rem),
+    rgba(8, 0, 21, 0.42);
+  box-shadow:
+    0 0 4.8rem rgba(123, 44, 255, 0.8),
+    0 0 1.2rem rgba(216, 180, 254, 0.28),
+    inset 0 0 1.5rem rgba(216, 180, 254, 0.12);
+  overflow: hidden;
+}
+
+.brand-logo {
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  object-fit: cover;
+  filter:
+    drop-shadow(0 0 0.5rem rgba(216, 180, 254, 0.34))
+    drop-shadow(0 0 1rem rgba(123, 44, 255, 0.32));
+}
+
+.eyebrow {
+  margin: 0;
+  color: rgba(216, 180, 254, 0.78);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.hero > .eyebrow {
+  display: none;
+}
+
+h1,
+h2,
+p {
+  margin-block-start: 0;
+}
+
+.app-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 15rem;
+  margin: 0;
+  color: rgba(248, 241, 232, 0.9);
+  font-size: clamp(1.65rem, 7vw, 2.15rem);
+  line-height: 1.38;
+  white-space: pre-line;
+}
+
+.hero-action {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 17rem);
+  margin-top: 0.1rem;
+}
+
+.unlock-note {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: var(--lavender);
+  font-weight: 800;
+}
+
+.crystal-scene {
+  position: absolute;
+  left: 50%;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 1;
+  width: min(20rem, 92vw);
+  height: 10.8rem;
+  margin-top: 0;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: 0.85rem;
+  transform: translateX(-50%);
+}
+
+.crystal-ball {
+  position: relative;
+  width: 7.7rem;
+  aspect-ratio: 1;
+  border: 1px solid rgba(248, 241, 232, 0.45);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 37% 30%, rgba(248, 241, 232, 0.9) 0 0.22rem, transparent 0.28rem),
+    radial-gradient(circle at 33% 28%, rgba(248, 241, 232, 0.55), transparent 1.35rem),
+    radial-gradient(circle at 62% 72%, rgba(168, 85, 247, 0.5), transparent 2.4rem),
+    radial-gradient(circle at 50% 55%, rgba(216, 180, 254, 0.34), rgba(123, 44, 255, 0.6) 44%, rgba(8, 0, 21, 0.96) 78%);
+  box-shadow:
+    0 0 3.4rem rgba(123, 44, 255, 0.9),
+    0 0 1.3rem rgba(216, 180, 254, 0.38),
+    inset 0 0 1.8rem rgba(248, 241, 232, 0.18);
+}
+
+.crystal-ball::after {
+  content: "";
+  position: absolute;
+  left: 1.35rem;
+  top: 1rem;
+  width: 2rem;
+  height: 0.72rem;
+  border-radius: 999px;
+  background: rgba(248, 241, 232, 0.34);
+  filter: blur(0.5px);
+  transform: rotate(-22deg);
+}
+
+.candle {
+  width: 1.38rem;
+  height: 5.4rem;
+  border-radius: 0.3rem 0.3rem 0.1rem 0.1rem;
+  background: linear-gradient(180deg, #7B2CFF, #1B003D 70%, #080015);
+  position: relative;
+  box-shadow:
+    0 0 1.6rem rgba(123, 44, 255, 0.56),
+    inset 0.2rem 0 0.5rem rgba(216, 180, 254, 0.18);
+}
+
+.candle::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -1.3rem;
+  width: 0.7rem;
+  height: 1.2rem;
+  border-radius: 999px 999px 999px 0;
+  background: radial-gradient(circle at 50% 72%, #F8F1E8, #D8B4FE 45%, #7B2CFF 82%);
+  transform: translateX(-50%) rotate(45deg);
+  box-shadow: 0 0 1.2rem rgba(216, 180, 254, 0.9);
+}
+
+.candle-left {
+  transform: rotate(-4deg);
+}
+
+.candle-right {
+  transform: rotate(4deg);
+}
+
+.crystal-small {
+  width: 1.25rem;
+  height: 1.9rem;
+  margin-bottom: 0.15rem;
+  clip-path: polygon(50% 0, 100% 38%, 78% 100%, 22% 100%, 0 38%);
+  background:
+    linear-gradient(135deg, rgba(248, 241, 232, 0.9), rgba(216, 180, 254, 0.62) 45%, rgba(123, 44, 255, 0.48));
+  box-shadow: 0 0 1.4rem rgba(168, 85, 247, 0.6);
+}
+
+.crystal-small-left {
+  transform: rotate(-18deg);
+}
+
+.crystal-small-right {
+  transform: rotate(18deg);
+}
+
+.panel {
+  position: relative;
+  margin-block: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 0.5rem;
+  background: var(--panel);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.28);
+}
+
+.test-panel {
+  margin-top: -0.25rem;
+}
+
+.section-heading h2 {
+  margin: 0.35rem 0 0.85rem;
+  font-size: 1.45rem;
+  line-height: 1.12;
+}
+
+.test-step {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.test-question {
+  margin: 0;
+  color: var(--aura);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.answer-grid,
+.sign-grid,
+.birth-grid,
+.daily-grid,
+.zodiac-options {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.answer-choice,
+.zodiac-choice {
+  width: 100%;
+  border: 1px solid rgba(217, 199, 255, 0.18);
+  border-radius: 0.5rem;
+  padding: 0.85rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.answer-choice {
+  min-height: 3rem;
+  text-transform: capitalize;
+}
+
+.answer-choice[aria-pressed="true"],
+.answer-choice:hover,
+.zodiac-choice[aria-pressed="true"] {
+  border-color: rgba(216, 180, 254, 0.72);
+  background: rgba(123, 44, 255, 0.18);
+}
+
+.zodiac-choice strong {
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.zodiac-choice span {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.daily-grid article,
+.reading-grid article {
+  padding: 0.85rem;
+  border: 1px solid rgba(217, 199, 255, 0.14);
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.daily-grid span,
+.reading-grid span {
+  color: var(--rose);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.daily-grid p,
+.reading-grid p {
+  margin: 0.38rem 0 0;
+  color: var(--muted);
+  line-height: 1.48;
+}
+
+.tarot-card {
+  width: 100%;
+  min-height: 17rem;
+  border: 1px solid rgba(216, 180, 254, 0.34);
+  border-radius: 0.5rem;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(123, 44, 255, 0.34), transparent 8rem),
+    linear-gradient(145deg, #21133f, #0b0713);
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  padding: 1.2rem;
+  cursor: pointer;
+  box-shadow: inset 0 0 3rem rgba(123, 44, 255, 0.28);
+}
+
+.card-back {
+  color: var(--candle);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.card-face {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.card-face strong {
+  font-family: Georgia, serif;
+  font-size: 2rem;
+}
+
+.card-face small {
+  color: var(--aura);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.card-face em {
+  max-width: 18rem;
+  color: var(--candle);
+  font-family: Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.reading-grid {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+}
+
+form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.professional-grid {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 0.95rem;
+}
+
+.professional-card {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 4.8rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+  border: 1px solid rgba(217, 199, 255, 0.18);
+  border-radius: 0.5rem;
+  padding: 0.65rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.professional-card[aria-pressed="true"],
+.professional-card:hover {
+  border-color: rgba(216, 180, 254, 0.72);
+  background: rgba(123, 44, 255, 0.18);
+}
+
+.professional-card img {
+  width: 4.8rem;
+  aspect-ratio: 1;
+  border-radius: 0.45rem;
+  object-fit: cover;
+}
+
+.professional-card strong,
+.professional-card span,
+.professional-card small {
+  min-width: 0;
+}
+
+.professional-card strong {
+  display: block;
+  margin-bottom: 0.12rem;
+}
+
+.professional-card span span,
+.professional-card small {
+  display: block;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.professional-card small {
+  margin-top: 0.18rem;
+  font-size: 0.78rem;
+}
+
+label {
+  display: grid;
+  gap: 0.38rem;
+  color: var(--aura);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+select,
+input,
+textarea {
+  width: 100%;
+  border: 1px solid rgba(217, 199, 255, 0.2);
+  border-radius: 0.5rem;
+  background: rgba(5, 3, 12, 0.72);
+  color: var(--text);
+  padding: 0.8rem;
+}
+
+.primary-action {
+  min-height: 3.25rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #F8F1E8, #D8B4FE 42%, #7B2CFF);
+  color: #080015;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow:
+    0 0 1.5rem rgba(123, 44, 255, 0.42),
+    0 0.8rem 2rem rgba(0, 0, 0, 0.34);
+}
+
+.form-status {
+  min-height: 1.5rem;
+  margin: 0;
+  color: var(--candle);
+  line-height: 1.45;
+}
+
+@media (min-width: 48rem) {
+  .app-shell {
+    width: min(100%, 68rem);
+  }
+
+  .hero {
+    min-height: 100svh;
+  }
+
+  .hero-compact {
+    min-height: 30vh;
+  }
+
+  .brand-mark {
+    width: 15rem;
+  }
+
+  .reading-grid,
+  .zodiac-options,
+  .answer-grid,
+  .sign-grid,
+  .birth-grid,
+  .daily-grid,
+  .professional-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .zodiac-options .zodiac-choice:last-child {
+    grid-column: 1 / -1;
+  }
+}
