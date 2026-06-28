@@ -568,6 +568,18 @@ form {
   margin-top: 0.18rem;
 }
 
+.text-action {
+  width: fit-content;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--lavender);
+  font-weight: 800;
+  text-align: left;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .legal-copy {
   display: grid;
   gap: 0.75rem;

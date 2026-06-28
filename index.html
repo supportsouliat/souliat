@@ -126,6 +126,7 @@
             <input id="legal-consent" type="checkbox" />
             I accept the Terms, Privacy Notice, data processing, and AI transparency notice.
           </label>
+          <button class="text-action" id="open-legal" type="button">View terms and privacy notice</button>
           <div class="auth-actions">
             <button class="primary-action" id="sign-in-password" type="button">Sign in</button>
             <button class="secondary-action" id="create-account" type="button">Create account</button>
@@ -139,7 +140,7 @@
         <p class="form-status" id="auth-status" role="status"></p>
       </section>
 
-      <section class="panel legal-panel" id="legal-panel" aria-labelledby="legal-title">
+      <section class="panel legal-panel" id="legal-panel" aria-labelledby="legal-title" hidden>
         <div class="section-heading">
           <p class="eyebrow">Legal</p>
           <h2 id="legal-title">Terms, privacy and AI notice.</h2>
@@ -151,6 +152,7 @@
           <p>Some content may be generated or assisted by AI. Human review may be used for replies and professional guidance. Do not submit highly sensitive information unless it is necessary for your request.</p>
           <p>By creating an account or sending a message, you confirm that you accept these terms and consent to this data processing.</p>
         </div>
+        <button class="secondary-action" id="close-legal" type="button">Close notice</button>
       </section>
 
       <section class="panel unlocked-panel" id="daily-access" aria-labelledby="daily-title" hidden>
