@@ -99,6 +99,8 @@ const professionals = [
   }
 ];
 
+const supportEmail = "supportsouliat@gmail.com";
+
 const revealButton = document.querySelector("#reveal-card");
 const cardBack = document.querySelector(".card-back");
 const cardFace = document.querySelector(".card-face");
@@ -252,6 +254,31 @@ function updateUnlockedMessage() {
   dailyTitle.textContent = message;
 }
 
+function isValidEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+}
+
+async function sendSouliatEmail(subject, fields) {
+  const payload = new FormData();
+  payload.append("_subject", subject);
+  payload.append("_captcha", "false");
+  payload.append("_template", "table");
+
+  Object.entries(fields).forEach(([key, value]) => {
+    payload.append(key, String(value || "Not provided"));
+  });
+
+  const response = await fetch(`https://formsubmit.co/ajax/${supportEmail}`, {
+    method: "POST",
+    headers: { Accept: "application/json" },
+    body: payload
+  });
+
+  if (!response.ok) {
+    throw new Error("Message could not be sent.");
+  }
+}
+
 function renderIntentionOptions() {
   renderOptions(
     document.querySelector("#intention-options"),
@@ -351,6 +378,7 @@ form.addEventListener("submit", async (event) => {
     question: String(formData.get("question") ?? ""),
     zodiacPreference: selectedZodiac
   };
+  const email = String(formData.get("email") ?? "").trim();
   const validation = validateInquiry(draft);
 
   if (!validation.ok) {
@@ -358,25 +386,77 @@ form.addEventListener("submit", async (event) => {
     return;
   }
 
-  await createReadingRequest(draft);
-  status.textContent = "Message received. We will reply soon.";
-  form.reset();
+  if (!isValidEmail(email)) {
+    status.textContent = "Add a valid email so we can reply.";
+    return;
+  }
+
+  status.textContent = "Sending your message...";
+
+  try {
+    await createReadingRequest(draft);
+    await sendSouliatEmail("SOULIAT personal card spread request", {
+      name: seekerName,
+      email,
+      topic: draft.topic,
+      question: draft.question,
+      astrologySystem: selectedZodiac,
+      westernSign,
+      vedicSign,
+      birthDate,
+      birthTime,
+      birthPlace,
+      preferredLanguage,
+      region
+    });
+    status.textContent = "Message received. We will reply soon.";
+    form.reset();
+  } catch {
+    status.textContent = "We could not send your message. Please try again.";
+  }
 });
 
 const professionalForm = document.querySelector("#professional-form");
 const professionalStatus = document.querySelector("#professional-status");
 
-professionalForm.addEventListener("submit", (event) => {
+professionalForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const formData = new FormData(professionalForm);
+  const email = String(formData.get("email") ?? "").trim();
   const message = String(formData.get("professionalMessage") ?? "").trim();
+
+  if (!isValidEmail(email)) {
+    professionalStatus.textContent = "Add a valid email so we can reply.";
+    return;
+  }
 
   if (message.length < 16) {
     professionalStatus.textContent = "Leave your message with a little more detail.";
     return;
   }
 
-  professionalStatus.textContent = "Message received. We will reply soon.";
-  professionalForm.reset();
+  professionalStatus.textContent = "Sending your message...";
+
+  try {
+    await sendSouliatEmail("SOULIAT professional guidance request", {
+      name: seekerName,
+      email,
+      selectedProfessional,
+      focusArea,
+      message,
+      astrologySystem: selectedZodiac,
+      westernSign,
+      vedicSign,
+      birthDate,
+      birthTime,
+      birthPlace,
+      preferredLanguage,
+      region
+    });
+    professionalStatus.textContent = "Message received. We will reply soon.";
+    professionalForm.reset();
+  } catch {
+    professionalStatus.textContent = "We could not send your message. Please try again.";
+  }
 });

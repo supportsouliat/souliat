@@ -165,7 +165,9 @@
           <p class="eyebrow">Personal card spread</p>
           <h2 id="inquiry-title">Ask for a personal card spread.</h2>
         </div>
-        <form id="inquiry-form">
+        <form id="inquiry-form" action="https://formsubmit.co/supportsouliat@gmail.com" method="POST">
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_template" value="table" />
           <label>
             Focus area
             <select name="topic" required>
@@ -177,6 +179,10 @@
               <option value="healing">Healing</option>
               <option value="spirituality">Spirituality</option>
             </select>
+          </label>
+          <label>
+            Your email
+            <input name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
           </label>
           <label>
             Your question
@@ -202,7 +208,13 @@
           aria-label="Choose a SOULIAT professional"
           data-profiles="Aarav, Priya, Vikram Sethi, Camila, Anjali, Evelyn"
         ></div>
-        <form id="professional-form">
+        <form id="professional-form" action="https://formsubmit.co/supportsouliat@gmail.com" method="POST">
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_template" value="table" />
+          <label>
+            Your email
+            <input name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+          </label>
           <label>
             Leave your message
             <textarea
